@@ -53,7 +53,7 @@ export const loginController = async (
             // Hash a dummy password to prevent timing attacks
             await bcrypt.compare(
                 password,
-                '$2a$10$dummyhashtopreventtimingattack'
+                'DummyHashToPreventTimingAttack'
             );
             return res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message: ERROR_MESSAGES.INVALID_CREDENTIALS,
