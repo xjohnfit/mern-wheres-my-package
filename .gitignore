@@ -1,0 +1,135 @@
+# .gitignore for mern-wheres-my-package
+# Common ignores for Node, TypeScript, frontend builds, and OS/IDE files
+
+### Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Logs
+logs/
+*.log
+
+### Runtime files
+pids/
+*.pid
+*.seed
+tmp/
+temp/
+
+### Build output
+dist/
+build/
+out/
+coverage/
+.nyc_output/
+
+### React build artifacts
+build/
+dist/
+.next/
+out/
+
+### TypeScript
+*.tsbuildinfo
+
+### Source maps and compiled JS (if you build into the repo)
+*.js
+*.js.map
+
+### React/Frontend specific
+# React build files
+/build
+/dist
+# Static assets that might be generated
+/public/static/js/*.js
+/public/static/css/*.css
+# Storybook build
+storybook-static/
+
+### Environment
+.env
+.env.*.local
+.env.local
+.env.test
+.env.production
+.env.production.local
+
+### OS files
+.DS_Store
+Thumbs.db
+
+### Editors/IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.iml
+
+### macOS
+.Spotlight-V100
+.Trashes
+
+### Debug/temporary
+node_repl_history
+.cache/
+
+### React Frontend Frameworks
+
+# Create React App
+/build/
+/public/hot-update*
+
+# Next.js
+.next/
+next-env.d.ts
+
+# Gatsby
+.cache/
+public/
+gatsby-config*.js
+
+# Vite
+dist/
+.vite/
+vite.config.*.timestamp-*
+
+# React Testing
+# Jest coverage
+coverage/
+.nyc_output/
+# React Testing Library
+__tests__/__snapshots__/
+
+# React development
+.eslintcache
+
+### React Native
+android/
+ios/
+
+### Database
+*.sqlite
+*.sqlite3
+dump.rdb
+mongod.lock
+
+### React/Frontend Misc
+# Bundle analyzer reports  
+bundle-report.html
+webpack-bundle-analyzer-report.html
+
+# React dev server
+.history/
+
+# Package manager artifacts
+package-lock.json.backup
+yarn.lock.backup
+
+### Misc
+credentials.json
+.env.*.secret
+
+# End of .gitignore
