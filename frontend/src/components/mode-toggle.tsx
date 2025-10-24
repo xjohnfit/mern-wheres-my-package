@@ -8,7 +8,7 @@ import {
 import { useTheme } from "@/components/theme-provider"
 
 export function ModeToggle() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
 
   return (
     <DropdownMenu>

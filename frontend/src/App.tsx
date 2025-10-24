@@ -3,9 +3,8 @@ import Layout from "./Layout"
 import Homepage from "./Homepage";
 
 function App() {
-
   return(
-    <div className="font-primary">
+    <div className="font-primary z-50 relative">
     <Routes>
       <Route path="/" element={<Layout><Homepage /></Layout>} />
       <Route path="/login" element={<Layout><div>Login Page</div></Layout>} />
