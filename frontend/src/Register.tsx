@@ -1,4 +1,6 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { Link } from "react-router";
 
 interface RegisterData {
     fullName: string;
@@ -27,9 +29,6 @@ const Register = () => {
             zip: '',
         });
 
-
-        console.log(data)
-
     const submitRegisterForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -44,11 +43,27 @@ const Register = () => {
             const responseData = await response.json();
             if (response.ok) {
                 console.log('Registration successful:', responseData);
+                toast.success('Registration successful! You can now log in.');
+                // Optionally, reset the form or redirect the user
+                setData({
+                    fullName: '',
+                    userName: '',
+                    email: '',
+                    password: '',
+                    gender: '',
+                    address: '',
+                    city: '',
+                    state: '',
+                    zip: '',
+                });
+
             } else {
                 console.error('Registration failed:', responseData);
+                toast.error(`Registration failed: ${responseData.message || 'Unknown error'}`);
             }
         } catch (error) {
             console.error('Error occurred during registration:', error);
+            toast.error('An error occurred during registration. Please try again later.');
         }
     };
 
@@ -141,6 +156,9 @@ const Register = () => {
                     className='bg-blue-500 text-white p-2'>
                     Register
                 </button>
+                <p>
+                    Already have an account? <Link to='/login'>Login</Link>
+                </p>
             </form>
         </section>
     );
