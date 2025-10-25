@@ -27,7 +27,7 @@ const Nav = () => {
                 </Link>
             </div>
 
-            <div className='w-full flex items-center justify-end gap-10'>
+            <div className='w-full flex items-center justify-end gap-5'>
                 <Link
                     to='/register'
                     className='text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors'>
