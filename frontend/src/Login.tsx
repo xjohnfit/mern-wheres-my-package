@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
+import AppContext from './context/AppContext';
 
 interface RegisterData {
     email: string;
@@ -9,7 +10,9 @@ interface RegisterData {
 }
 
 const Login = () => {
+
     const navigate = useNavigate();
+    const { setUserData } = useContext(AppContext);
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
     const [data, setData] = useState<RegisterData>({
@@ -25,18 +28,23 @@ const Login = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+
                 },
                 body: JSON.stringify(data),
             });
             const responseData = await response.json();
             if (response.ok) {
+
+                setUserData(responseData.user);
                 console.log('Login successful:', responseData);
                 toast.success('Login successful!');
-                // Optionally, reset the form or redirect the user
+
+                // Reset the form and redirect the user
                 setData({
                     email: '',
                     password: '',
                 });
+                
                 navigate('/track');
             } else {
                 console.error('Login failed:', responseData);
@@ -86,7 +94,7 @@ const Login = () => {
 
                 <button
                     type='submit'
-                    className='bg-blue-500 text-white p-2'>
+                    className='bg-blue-500 text-white p-2 rounded-xl cursor-pointer hover:bg-blue-600 transition-colors'>
                     Login
                 </button>
                 <p>

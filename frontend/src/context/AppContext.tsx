@@ -2,30 +2,23 @@ import { createContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
 interface AppContextProps {
-    backgroundFill: string;
-    setBackgroundFill: (value: string) => void;
-    isAuthenticated: boolean;
-    setIsAuthenticated: (value: boolean) => void;
+    userData: Record<string, any> | null;
+    setUserData: (value: Record<string, any> | null) => void;
 }
 
-export const AppContext = createContext<AppContextProps>({
-    backgroundFill: 'white',
-    setBackgroundFill: () => {},
-    isAuthenticated: false,
-    setIsAuthenticated: () => {},
+const AppContext = createContext<AppContextProps>({
+    userData: null,
+    setUserData: () => {},
 });
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-    const [backgroundFill, setBackgroundFill] = useState('white');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userData, setUserData] = useState<Record<string, any> | null>(null);
 
     return (
         <AppContext.Provider
             value={{
-                backgroundFill,
-                setBackgroundFill,
-                isAuthenticated,
-                setIsAuthenticated,
+                userData,
+                setUserData,
             }}
         >
             {children}
@@ -33,3 +26,4 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
+export default AppContext;

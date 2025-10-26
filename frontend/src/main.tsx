@@ -15,7 +15,6 @@ createRoot(document.getElementById('root')!).render(
                 storageKey='vite-ui-theme'>
                 <AppProvider>
                     <BackgroundLines children={<App />} />
-                    
                 </AppProvider>
             </ThemeProvider>
         </BrowserRouter>

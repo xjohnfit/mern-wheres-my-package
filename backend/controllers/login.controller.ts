@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import User from '../models/user.model.ts';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import jwt from 'jsonwebtoken';
 
 //Define a schema for request validation
 const loginSchema = z.object({
@@ -68,6 +69,20 @@ export const loginController = async (
             });
         }
 
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET as string,
+            { expiresIn: '1h' }
+        );
+
+        // Set token in HTTP-only cookie
+        res.cookie('WIMPCookie', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
+
         // Success response
         return res.status(HTTP_STATUS.OK).json({
             message: 'Login successful',
@@ -75,7 +90,8 @@ export const loginController = async (
                 id: user._id,
                 email: user.email,
                 // Include other safe user properties
-            }
+            },
+            token,
         });
     } catch (error) {
         // Log error for debugging (use proper logger in production)
