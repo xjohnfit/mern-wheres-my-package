@@ -35,7 +35,8 @@ const Login = () => {
             const responseData = await response.json();
             if (response.ok) {
 
-                setUserData(responseData.user);
+                // Persist both safe user fields and token for authenticated requests
+                setUserData({ ...responseData.user, token: responseData.token });
                 console.log('Login successful:', responseData);
                 toast.success('Login successful!');
 

@@ -2,8 +2,10 @@ import dotenv from 'dotenv';
 
 import express from 'express';
 import userRoutes from './routes/user.route.ts';
-import connectDB from './lib/db.ts';
+import trackingRoutes from './routes/tracking.route.ts';
+import connectDB from './config/db.ts';
 import cors from 'cors';
+import { verifyToken } from './middlewares/verifyToken.ts';
 
 dotenv.config({
     path: './.env.local',
@@ -20,6 +22,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/packages', verifyToken, trackingRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
