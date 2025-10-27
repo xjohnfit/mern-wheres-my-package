@@ -88,6 +88,7 @@ export const loginController = async (
             message: 'Login successful',
             user: {
                 id: user._id,
+                fullName: user.fullName,
                 email: user.email,
                 // Include other safe user properties
             },

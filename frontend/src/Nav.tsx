@@ -1,32 +1,30 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ModeToggle } from './components/mode-toggle';
 import AppContext from './context/AppContext';
 import { useContext } from 'react';
 import toast from 'react-hot-toast';
 
 const Nav = () => {
-
     const { userData, setUserData } = useContext(AppContext);
+    const navigate = useNavigate();
 
-        const handleLogout = async () => {
-
-            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+    const handleLogout = async () => {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
         try {
-            const response = await fetch(`${apiBaseUrl}/users/logout`, {
+            // Best-effort request to server to clear cookie (optional for header-based auth)
+            await fetch(`${apiBaseUrl}/users/logout`, {
                 method: 'GET',
                 credentials: 'include',
             });
-            if (response.ok) {
-                console.log('Logout successful');
-                toast.success('Logout successful!');
-                setUserData(null);
-            } else {
-                console.log('Logout failed')
-                toast.error('Logout failed. Please try again.');
-                setUserData(null);
-            }
         } catch (error) {
+            // Ignore network error for logout; we'll clear client state regardless
             console.error('Error logging out:', error);
+        } finally {
+            // Clear client auth state so protected routes are blocked immediately
+            localStorage.removeItem('wimpUser');
+            setUserData(null);
+            toast.success('Logout successful!');
+            navigate('/login', { replace: true });
         }
     };
 
@@ -42,6 +40,11 @@ const Nav = () => {
                     to='/'
                     className='text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors'>
                     Home
+                </Link>
+                <Link
+                    to='/track'
+                    className='text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors'>
+                    Track
                 </Link>
                 <Link
                     to='/about'
@@ -82,7 +85,6 @@ const Nav = () => {
                             Login
                         </Link>
                     </div>
-                    
                 )}
                 <ModeToggle />
             </div>

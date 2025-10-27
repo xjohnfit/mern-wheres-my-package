@@ -10,7 +10,6 @@ interface RegisterData {
 }
 
 const Login = () => {
-
     const navigate = useNavigate();
     const { setUserData } = useContext(AppContext);
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -28,15 +27,19 @@ const Login = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-
                 },
                 body: JSON.stringify(data),
             });
             const responseData = await response.json();
             if (response.ok) {
-
                 // Persist both safe user fields and token for authenticated requests
-                setUserData({ ...responseData.user, token: responseData.token });
+                const persistedUser = {
+                    ...responseData.user,
+                    token: responseData.token,
+                };
+                setUserData(persistedUser);
+                // Save to localStorage so refreshes keep the session
+                localStorage.setItem('wimpUser', JSON.stringify(persistedUser));
                 console.log('Login successful:', responseData);
                 toast.success('Login successful!');
 
@@ -45,7 +48,7 @@ const Login = () => {
                     email: '',
                     password: '',
                 });
-                
+
                 navigate('/track');
             } else {
                 console.error('Login failed:', responseData);

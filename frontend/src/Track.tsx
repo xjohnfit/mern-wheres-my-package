@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import AppContext from './context/AppContext';
 import toast from 'react-hot-toast';
-import {fetchTrackingNumbersFromApi} from './FetchFromApi';
 
 const Track = () => {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-    const [trackingNumber, setTrackingNumber] = useState('');
+    const [trackingNumberInput, setTrackingNumberInput] = useState('');
 
     const { userData } = useContext(AppContext);
     const { trackingNumbers, setTrackingNumbers } = useContext(AppContext);
@@ -34,7 +33,10 @@ const Track = () => {
                 // Backend returns array of package objects; store only the trackingNumber strings in context
                 setTrackingNumbers(
                     Array.isArray(data.packages)
-                        ? data.packages.map((p: { trackingNumber: string }) => p.trackingNumber)
+                        ? data.packages.map(
+                              (p: { trackingNumber: string }) =>
+                                  p.trackingNumber
+                          )
                         : []
                 );
             } catch (err) {
@@ -44,21 +46,13 @@ const Track = () => {
         };
 
         fetchTrackingNumbers();
-        console.log(trackingNumbers);
         // run once on mount or when token changes
     }, [userData?.token]);
-
-    for (const tn of trackingNumbers) {
-        const result = fetchTrackingNumbersFromApi(tn);
-        console.log(result);
-    }
-
-    
 
     const handleAddPackage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!trackingNumber) {
+        if (!trackingNumberInput.trim()) {
             toast.error('Please enter a tracking number');
             return;
         }
@@ -71,14 +65,16 @@ const Track = () => {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${userData.token}`,
             },
-            body: JSON.stringify({ trackingNumber }),
+            body: JSON.stringify({
+                trackingNumber: trackingNumberInput.trim(),
+            }),
         });
 
         const data = await response.json();
         if (response.ok) {
             toast.success('Tracking number added successfully');
-            setTrackingNumbers([...trackingNumbers, trackingNumber]);
-            setTrackingNumber('');
+            setTrackingNumbers([...trackingNumbers, trackingNumberInput]);
+            setTrackingNumberInput('');
         } else {
             toast.error(data.error || 'Failed to add tracking number');
             console.error(data.error);
@@ -87,32 +83,40 @@ const Track = () => {
 
     return (
         <div className='h-screen w-full flex flex-col items-center gap-6 pt-20'>
+            <p className='w-full text-3xl text-left'>
+                Hello, Welcome back, {userData?.fullName || 'Guest'}
+            </p>
             <h1 className='text-4xl '>Start adding tracking numbers</h1>
             <form
-                className='w-full flex flex-col items-center gap-4'
+                className='w-full'
                 onSubmit={handleAddPackage}>
-                <input
-                    className='w-[50%] h-20 border text-4xl border-blue-700 p-10'
-                    type='text'
-                    placeholder='Enter tracking number'
-                    value={trackingNumber}
-                    onChange={(e) => setTrackingNumber(e.target.value)}
-                />
-                <button
-                    className='border border-blue-300 px-20 py-5 rounded-xl text-xl shadow-2xl bg-blue-400 hover:bg-blue-500'
-                    type='submit'>
-                    Track
-                </button>
+                <div className='w-full flex items-center justify-between gap-4'>
+                    <input
+                        className='w-[70%] h-20 border text-4xl border-gray-700 p-10'
+                        type='text'
+                        placeholder='Enter tracking number'
+                        value={trackingNumberInput}
+                        onChange={(e) => setTrackingNumberInput(e.target.value)}
+                    />
+                    <button
+                        className='cursor-pointer w-fit border border-blue-300 px-20 py-5 rounded-xl text-xl shadow-2xl bg-blue-400 hover:bg-blue-500'
+                        type='submit'>
+                        Track This Package
+                    </button>
+                </div>
             </form>
 
             {trackingNumbers.length === 0 ? (
                 <p>No tracking numbers added yet.</p>
             ) : (
-                <ul className='w-full border border-amber-300 p-10 flex box-border gap-10 justify-center flex-wrap'>
+                <ul className='w-full flex box-border gap-10 justify-between flex-wrap'>
+                    <h3 className='w-full text-2xl font-bold'>
+                        Packages Coming:
+                    </h3>
                     {trackingNumbers.map((number, index) => (
                         <div
                             key={index}
-                            className='w-[45%] border border-gray-300 p-5 '>
+                            className='w-[45%] border border-dashed border-gray-300 p-5 '>
                             <li>{number}</li>
                         </div>
                     ))}
